@@ -31,3 +31,5 @@ mongoose.connect('mongodb+srv://zayn88799:zayn88799@cluster0.yuanu6a.mongodb.net
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
+
+module.exports = app
