@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Campaign = require('../models/campaign'); // Adjust the path if needed
+const Campaign = require('../models/Campaign'); // Adjust the path if needed
 const User = require('../models/User');
 
 // Create a new campaign
