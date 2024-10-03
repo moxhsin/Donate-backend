@@ -19,7 +19,14 @@ const campaignSchema = new mongoose.Schema({
   remainingAmount: Number,
   createdUsername: String,
   createdUserEmail: String,
-  createdOn: Date
+  createdOn: Date,
+  comments: [
+    {
+      name: String,
+      createdOn: Date,
+      comment: String
+    }
+  ]
 });
 
 module.exports = mongoose.model('Campaign', campaignSchema);
