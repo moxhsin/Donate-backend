@@ -133,7 +133,59 @@ router.post('/donate/:id', async (req, res) => {
   }
 });
 
+router.post('/comment/:id', async (req, res) => {
+  try {
+    const { name, comment } = req.body;
+    const createdOn = new Date(); // Set the current date as createdOn
+    console.log('Received comment request:', { name, comment });
 
+    // Find the campaign by ID
+    const campaign = await Campaign.findById(req.params.id);
+
+    // Check if the campaign exists
+    if (!campaign) {
+      return res.status(404).json({ message: 'Campaign not found' });
+    }
+
+    // Validate the comment payload
+    if (!name || !comment) {
+      return res.status(400).json({ message: 'Name and comment are required.' });
+    }
+
+    // Create the comment object
+    const newComment = { name, createdOn, comment };
+
+    // Push the new comment into the campaign's comments array
+    campaign.comments.push(newComment);
+
+    // Save the updated campaign
+    await campaign.save();
+
+    res.json({ message: 'Comment added successfully', comments: campaign.comments });
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+router.get('/comments/:id', async (req, res) => {
+  try {
+    // Find the campaign by ID
+    const campaign = await Campaign.findById(req.params.id);
+    console.log(req.params.id);
+    console.log(campaign);
+    // Check if the campaign exists
+    if (!campaign) {
+      return res.status(404).json({ message: 'Campaign not found' });
+    }
+
+    // Return the comments associated with the campaign
+    res.json({ message: 'Comments retrieved successfully', comments: campaign.comments });
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 
 module.exports = router;
