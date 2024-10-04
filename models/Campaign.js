@@ -26,7 +26,8 @@ const campaignSchema = new mongoose.Schema({
       createdOn: Date,
       comment: String
     }
-  ]
+  ],
+  image: String
 });
 
 module.exports = mongoose.model('Campaign', campaignSchema);
