@@ -6,7 +6,7 @@ const User = require('../models/User');
 // Create a new campaign
 router.post('/create', async (req, res) => {
   try {
-    const { title, country, zipCode, description, recipient, goal, createdUsername, createdUserEmail } = req.body;
+    const { title, country, zipCode, description, recipient, goal, createdUsername, createdUserEmail, image } = req.body;
     const email = createdUserEmail;
     const user = await User.findOne({ email });
     const status = user && user.isAdmin ? 'Approved' : 'Pending';
@@ -22,7 +22,8 @@ router.post('/create', async (req, res) => {
       remainingAmount: goal,
       createdUsername,
       createdUserEmail,
-      createdOn: new Date().toISOString()
+      createdOn: new Date().toISOString(),
+      image
     });
     await newCampaign.save();
     res.status(201).json({ message: 'Campaign submitted for review.' });
@@ -116,7 +117,7 @@ router.post('/donate/:id', async (req, res) => {
     campaign.donations.push({ donorName, amount });
 
     if (campaign.amountRaised >= campaign.goal) {
-      campaign.status = 'completed'; // Mark campaign as completed
+      campaign.status = 'Completed'; // Mark campaign as Completed
     }
 
     const topDonation = Math.max(...campaign.donations.map(d => d.amount));
@@ -172,8 +173,6 @@ router.get('/comments/:id', async (req, res) => {
   try {
     // Find the campaign by ID
     const campaign = await Campaign.findById(req.params.id);
-    console.log(req.params.id);
-    console.log(campaign);
     // Check if the campaign exists
     if (!campaign) {
       return res.status(404).json({ message: 'Campaign not found' });
