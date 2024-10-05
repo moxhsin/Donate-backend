@@ -7,7 +7,11 @@ const campaignSchema = new mongoose.Schema({
   country: String,
   zipCode: String,
   description: String,
-  recipient: String,
+  recipient: { 
+    type: String, 
+    enum: ['Medical', 'Education'], // Dropdown options
+    required: true // Optional: make this field required
+  },
   goal: Number,
   status: { type: String, enum: ['Pending', 'Approved', 'Rejected', 'Completed'], default: 'Pending' },
   amountRaised: { type: Number, default: 0 },
@@ -19,11 +23,11 @@ const campaignSchema = new mongoose.Schema({
   remainingAmount: Number,
   createdUsername: String,
   createdUserEmail: String,
-  createdOn: Date,
+  createdOn: { type: Date, default: Date.now }, // Optional: set default to now
   comments: [
     {
       name: String,
-      createdOn: Date,
+      createdOn: { type: Date, default: Date.now }, // Optional: set default to now
       comment: String
     }
   ],
