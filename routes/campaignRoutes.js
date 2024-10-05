@@ -77,6 +77,29 @@ router.get('/all', async (req, res) => {
   }
 });
 
+// Get campaigns based on recipient type
+router.get('/filtered', async (req, res) => {
+  const { recipientType } = req.query; // Get the recipient type from the query parameters
+
+  try {
+    // Validate recipientType
+    if (!recipientType || !['Medical', 'Education'].includes(recipientType)) {
+      return res.status(400).json({ message: 'Invalid recipient type. Must be "Medical" or "Education".' });
+    }
+
+    // Find campaigns with the specified recipient type and status (Approved or Pending)
+    const campaigns = await Campaign.find({
+      recipient: recipientType,
+      status: { $in: ['Approved', 'Pending'] } // Only Approved and Pending statuses
+    });
+
+    res.json(campaigns);
+  } catch (error) {
+    console.error('Error fetching filtered campaigns:', error);
+    res.status(500).json({ message: 'Server error.' });
+  }
+});
+
 // Get campaign by ID
 router.get('/:id', async (req, res) => {
   try {
