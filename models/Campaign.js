@@ -7,6 +7,7 @@ const campaignSchema = new mongoose.Schema({
   country: String,
   zipCode: String,
   description: String,
+  updates:[],
   recipient: { 
     type: String, 
     enum: ['Medical', 'Education'], // Dropdown options
@@ -18,7 +19,8 @@ const campaignSchema = new mongoose.Schema({
   topDonor: String,
   donations: [{
     donorName: String,
-    amount: Number
+    amount: Number,
+    tip: Number
   }],
   remainingAmount: Number,
   createdUsername: String,
