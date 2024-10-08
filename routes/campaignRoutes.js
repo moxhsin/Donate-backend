@@ -114,11 +114,11 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Donate to a campaign
+
 // Donate to a campaign
 router.post('/donate/:id', async (req, res) => {
   try {
-    const { amount, donorName } = req.body;
+    const { amount, donorName, tip } = req.body;
     console.log('Received donation request:', { amount, donorName });
     const campaign = await Campaign.findById(req.params.id);
 
@@ -137,7 +137,7 @@ router.post('/donate/:id', async (req, res) => {
     }
     campaign.remainingAmount = Number(campaign.remainingAmount) - Number(amount);
     campaign.amountRaised = Number(campaign.amountRaised) + Number(amount);
-    campaign.donations.push({ donorName, amount });
+    campaign.donations.push({ donorName, amount , tip });
 
     if (campaign.amountRaised >= campaign.goal) {
       campaign.status = 'Completed'; // Mark campaign as Completed
