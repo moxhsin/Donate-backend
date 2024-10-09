@@ -209,5 +209,39 @@ router.get('/comments/:id', async (req, res) => {
   }
 });
 
+router.post('/updates/:id', async (req, res) => {
+  try {
+    const { images, update } = req.body;
+    const createdOn = new Date(); // Set the current date as createdOn
+
+    // Find the campaign by ID
+    const campaign = await Campaign.findById(req.params.id);
+
+    // Check if the campaign exists
+    if (!campaign) {
+      return res.status(404).json({ message: 'Campaign not found' });
+    }
+
+    // Validate the comment payload
+    if (!update) {
+      return res.status(400).json({ message: 'Update is are required.' });
+    }
+
+    // Create the comment object
+    const newUpdate = { images, createdOn, update };
+
+    // Push the new comment into the campaign's comments array
+    campaign.updates.push(newUpdate);
+
+    // Save the updated campaign
+    await campaign.save();
+
+    res.json({ message: 'Update added successfully', updtes: campaign.comments });
+  } catch (error) {
+    console.error('Error adding update:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 
 module.exports = router;
