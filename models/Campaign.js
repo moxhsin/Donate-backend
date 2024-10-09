@@ -33,6 +33,13 @@ const campaignSchema = new mongoose.Schema({
       comment: String
     }
   ],
+  updates: [
+    {
+      images: [String],
+      createdOn: { type: Date, default: Date.now },
+      update: String
+    }
+  ],
   image: String
 });
 
