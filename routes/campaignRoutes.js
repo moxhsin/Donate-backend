@@ -44,6 +44,40 @@ router.get('/pending', async (req, res) => {
   }
 });
 
+// Update campaign
+router.put('/update/:id', async (req, res) => {
+  const { title, country, zipCode, description, recipient, goal } = req.body;
+
+  try {
+    // Find the existing campaign
+    const campaign = await Campaign.findById(req.params.id);
+    if (!campaign) {
+      return res.status(404).json({ message: 'Campaign not found' });
+    }
+
+    // Check if the new goal is less than the amount raised
+    if (goal < campaign.amountRaised) {
+      return res.status(400).json({ message: 'Goal cannot be less than amount raised' });
+    }
+
+    // Update only allowed fields
+    campaign.title = title;
+    campaign.country = country;
+    campaign.zipCode = zipCode;
+    campaign.description = description;
+    campaign.recipient = recipient;
+    campaign.goal = goal;
+
+    // Save updated campaign to the database
+    await campaign.save();
+
+    res.json({ message: 'Campaign updated successfully', campaign });
+  } catch (error) {
+    console.error('Error updating campaign:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // Approve a campaign
 router.put('/approve/:id', async (req, res) => {
   try {
