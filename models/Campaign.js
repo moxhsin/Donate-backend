@@ -9,9 +9,8 @@ const campaignSchema = new mongoose.Schema({
   description: String,
   
   recipient: { 
-    type: String, 
-    enum: ['Medical', 'Education'], // Dropdown options
-    required: true // Optional: make this field required
+    type: String,
+    required: true 
   },
   goal: Number,
   status: { type: String, enum: ['Pending', 'Approved', 'Rejected', 'Completed'], default: 'Pending' },
