@@ -13,10 +13,12 @@ app.use(bodyParser.json());
 // Import routes
 const authRoutes = require('./routes/authRoutes');
 const campaignRoutes = require('./routes/campaignRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
 
 // Use routes
 app.use('/api', authRoutes); // Ensure authRoutes is correctly imported and used
 app.use('/api/campaigns', campaignRoutes); // Ensure campaignRoutes is correctly imported and used
+app.use('/api/categories', categoryRoutes);
 
 // Connect to MongoDB
 mongoose.connect('mongodb+srv://zayn88799:zayn88799@cluster0.yuanu6a.mongodb.net/donate?retryWrites=true&w=majority&appName=Cluster0', {
