@@ -116,11 +116,6 @@ router.get('/filtered', async (req, res) => {
   const { recipientType } = req.query; // Get the recipient type from the query parameters
 
   try {
-    // Validate recipientType
-    if (!recipientType || !['Medical', 'Education'].includes(recipientType)) {
-      return res.status(400).json({ message: 'Invalid recipient type. Must be "Medical" or "Education".' });
-    }
-
     // Find campaigns with the specified recipient type and status (Approved or Pending)
     const campaigns = await Campaign.find({
       recipient: recipientType,
@@ -131,6 +126,42 @@ router.get('/filtered', async (req, res) => {
   } catch (error) {
     console.error('Error fetching filtered campaigns:', error);
     res.status(500).json({ message: 'Server error.' });
+  }
+});
+
+router.get('/campaign-stats', async (req, res) => {
+  try {
+    // Total number of campaigns
+    const totalCampaigns = await Campaign.countDocuments();
+
+    // Total donation amounts and unique donors
+    const campaigns = await Campaign.find();
+
+    let totalDonationAmount = 0;
+    const uniqueDonorsSet = new Set();
+    
+    campaigns.forEach(campaign => {
+      campaign.donations.forEach(donation => {
+        totalDonationAmount += donation.amount || 0; // Add donation amount
+        uniqueDonorsSet.add(donation.donorName); // Add donor name to the set for uniqueness
+      });
+    });
+
+    const totalUniqueDonors = uniqueDonorsSet.size;
+
+    // Convert the Set to an Array to return it in the response
+    const uniqueDonorNames = Array.from(uniqueDonorsSet);
+
+    // Respond with the statistics
+    res.json({
+      totalCampaigns,
+      totalDonationAmount,
+      totalUniqueDonors,
+      uniqueDonorNames, // Include unique donor names in the response
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 
